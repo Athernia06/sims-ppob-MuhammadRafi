@@ -1,0 +1,8 @@
+/* src/index.css */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: white; /* Memaksa background jadi putih */
+  color: #333; /* Warna teks default gelap */
+  font-family: sans-serif;
+}
