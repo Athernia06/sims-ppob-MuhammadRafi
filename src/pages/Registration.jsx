@@ -54,14 +54,12 @@ const Registration = () => {
       setIsError(false);
       setMessage(response.data.message || 'Registrasi berhasil! Silakan login.');
       
-      // Kosongkan form setelah sukses
       setEmail('');
       setFirstName('');
       setLastName('');
       setPassword('');
       setConfirmPassword('');
 
-      // Opsional: Arahkan ke halaman login setelah 2 detik
       setTimeout(() => {
         navigate('/login');
       }, 2000);

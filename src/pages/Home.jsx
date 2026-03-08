@@ -16,7 +16,6 @@ const Home = () => {
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
-        // Fetch semua data secara paralel agar lebih cepat
         const [profileRes, balanceRes, servicesRes, bannersRes] = await Promise.all([
           api.get('/profile'),
           api.get('/balance'),
@@ -85,7 +84,7 @@ const Home = () => {
           {services.map((service, index) => (
             <div 
               key={index} 
-              onClick={() => navigate('/payment', { state: { service } })} // <-- Tambahkan baris ini
+              onClick={() => navigate('/payment', { state: { service } })} 
               style={{ textAlign: 'center', width: '80px', cursor: 'pointer' }}
             >
               <img 

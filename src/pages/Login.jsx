@@ -15,10 +15,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Mencegah reload halaman saat submit
+    e.preventDefault(); 
     setErrorMsg('');
 
-    // 1. Validasi Input (Syarat dari soal)
+    // 1. Validasi Input
     if (!email || !password) {
       setErrorMsg('Email dan password wajib diisi');
       return;
@@ -38,7 +38,6 @@ const Login = () => {
     // 2. Hit API Login
     try {
       setIsLoading(true);
-      // Catatan: Pastikan endpoint '/login' sesuai dengan dokumentasi Swagger
       const response = await api.post('/login', {
         email,
         password,
@@ -51,7 +50,6 @@ const Login = () => {
       // 4. Arahkan ke halaman utama (Home) setelah sukses
       navigate('/');
     } catch (error) {
-      // Handling response error dari API (Syarat dari soal)
       if (error.response && error.response.data) {
         setErrorMsg(error.response.data.message || 'Login gagal, periksa kembali email dan password Anda.');
       } else {
@@ -100,7 +98,7 @@ const Login = () => {
           style={{ 
             padding: '12px', 
             cursor: isLoading ? 'not-allowed' : 'pointer', 
-            backgroundColor: '#f13b2f', // Warna merah khas PPOB pada mockup umumnya
+            backgroundColor: '#f13b2f', 
             color: 'white', 
             border: 'none', 
             borderRadius: '5px',

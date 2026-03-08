@@ -5,7 +5,6 @@ import { Link, useLocation } from 'react-router-dom';
 const Navbar = () => {
   const location = useLocation();
 
-  // Fungsi kecil untuk mengecek apakah menu sedang aktif
   const isActive = (path) => location.pathname === path;
 
   return (

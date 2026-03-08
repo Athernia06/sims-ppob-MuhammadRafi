@@ -8,12 +8,12 @@ const Transaction = () => {
   const [transactions, setTransactions] = useState([]);
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true); // Untuk menyembunyikan tombol jika data habis
+  const [hasMore, setHasMore] = useState(true); 
   const limit = 5;
 
   useEffect(() => {
     fetchBalance();
-    fetchTransactions(0); // Ambil 5 data pertama saat halaman dimuat
+    fetchTransactions(0);
   }, []);
 
   const fetchBalance = async () => {
@@ -32,9 +32,8 @@ const Transaction = () => {
       const newTransactions = res.data.data.records;
 
       if (newTransactions.length === 0) {
-        setHasMore(false); // Jika tidak ada data lagi, sembunyikan tombol
+        setHasMore(false); 
       } else {
-        // Gabungkan data lama dengan data baru
         setTransactions((prev) => [...prev, ...newTransactions]);
       }
     } catch (error) {
@@ -50,7 +49,6 @@ const Transaction = () => {
     fetchTransactions(nextOffset);
   };
 
-  // Fungsi untuk format tanggal menjadi "17 Agustus 2023, 13:10 WIB"
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' };
@@ -79,7 +77,6 @@ const Transaction = () => {
             <p style={{ textAlign: 'center', color: '#888' }}>Belum ada transaksi.</p>
           ) : (
             transactions.map((trx, index) => {
-              // Tentukan warna berdasarkan jenis transaksi (TOPUP atau PAYMENT)
               const isTopUp = trx.transaction_type === 'TOPUP';
               const textColor = isTopUp ? 'green' : 'red';
               const sign = isTopUp ? '+' : '-';

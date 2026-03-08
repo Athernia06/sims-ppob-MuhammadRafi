@@ -2,9 +2,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  // Ambil token dari localStorage jika halaman di-refresh
   token: localStorage.getItem('token') || null, 
-  user: null, // Untuk menyimpan data profile
+  user: null, 
 };
 
 const authSlice = createSlice({
@@ -13,12 +12,12 @@ const authSlice = createSlice({
   reducers: {
     loginSuccess: (state, action) => {
       state.token = action.payload;
-      localStorage.setItem('token', action.payload); // Simpan token ke browser
+      localStorage.setItem('token', action.payload); 
     },
     logout: (state) => {
       state.token = null;
       state.user = null;
-      localStorage.removeItem('token'); // Hapus token saat logout
+      localStorage.removeItem('token'); 
     },
     setProfile: (state, action) => {
       state.user = action.payload;

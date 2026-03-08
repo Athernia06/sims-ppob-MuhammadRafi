@@ -8,7 +8,7 @@ import Navbar from '../components/Navbar';
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
-  const [isEdit, setIsEdit] = useState(false); // Toggle mode edit atau view
+  const [isEdit, setIsEdit] = useState(false); 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   
@@ -16,7 +16,7 @@ const Profile = () => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fileInputRef = useRef(null); // Referensi untuk membuka file explorer tersembunyi
+  const fileInputRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -36,7 +36,6 @@ const Profile = () => {
     }
   };
 
-  // --- Fungsi Update Teks (Nama) ---
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setMessage('');
@@ -49,7 +48,7 @@ const Profile = () => {
         last_name: lastName
       });
       setProfile(res.data.data);
-      setIsEdit(false); // Kembalikan ke mode view setelah sukses
+      setIsEdit(false); 
       setIsError(false);
       setMessage('Profile berhasil diupdate!');
     } catch (error) {
@@ -60,26 +59,24 @@ const Profile = () => {
     }
   };
 
-  // --- Fungsi Update Gambar ---
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // 1. Validasi ukuran maksimal 100KB (Syarat dari soal)
+    // 1. Validasi ukuran maksimal 100KB
     if (file.size > 100 * 1024) {
       setIsError(true);
       setMessage('Ukuran gambar maksimal 100 KB');
       return;
     }
 
-    // 2. Validasi format file (Opsional tapi direkomendasikan)
+    // 2. Validasi file format 
     if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
       setIsError(true);
       setMessage('Format gambar harus JPEG atau PNG');
       return;
     }
 
-    // Siapkan data dengan FormData untuk upload file
     const formData = new FormData();
     formData.append('file', file);
 
@@ -101,8 +98,8 @@ const Profile = () => {
 
   // --- Fungsi Logout ---
   const handleLogout = () => {
-    dispatch(logout()); // Hapus token dari Redux & LocalStorage
-    navigate('/login'); // Lempar kembali ke halaman Login
+    dispatch(logout()); 
+    navigate('/login'); 
   };
 
   if (!profile) return null;
@@ -122,7 +119,7 @@ const Profile = () => {
           />
           {/* Tombol Edit Foto (Pensil) */}
           <button 
-            onClick={() => fileInputRef.current.click()} // Membuka file dialog saat diklik
+            onClick={() => fileInputRef.current.click()} 
             style={{ 
               position: 'absolute', bottom: '5px', right: '5px', 
               backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '50%', 
@@ -137,7 +134,7 @@ const Profile = () => {
             ref={fileInputRef} 
             onChange={handleImageChange} 
             accept="image/jpeg, image/png" 
-            style={{ display: 'none' }} // Input aslinya disembunyikan
+            style={{ display: 'none' }} 
           />
         </div>
 
@@ -191,7 +188,7 @@ const Profile = () => {
                 <button 
                   type="button" 
                   onClick={(e) => {
-                    e.preventDefault(); // Mencegah form tersubmit secara paksa
+                    e.preventDefault(); 
                     setIsEdit(true);
                   }} 
                   style={{ padding: '15px', backgroundColor: 'white', color: '#f13b2f', border: '1px solid #f13b2f', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}
@@ -221,7 +218,7 @@ const Profile = () => {
                 <button 
                   type="button" 
                   onClick={(e) => { 
-                    e.preventDefault(); // Mencegah form tersubmit saat batal
+                    e.preventDefault(); 
                     setIsEdit(false); 
                     setFirstName(profile.first_name); 
                     setLastName(profile.last_name); 

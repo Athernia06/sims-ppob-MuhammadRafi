@@ -10,7 +10,6 @@ const TopUp = () => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Ambil data saldo saat ini
   useEffect(() => {
     fetchBalance();
   }, []);
@@ -24,14 +23,12 @@ const TopUp = () => {
     }
   };
 
-  // Pilihan nominal cepat
   const quickAmounts = [10000, 20000, 50000, 100000, 250000, 500000];
 
   const handleAmountChange = (e) => {
-    // Hanya izinkan input angka
     const value = e.target.value.replace(/[^0-9]/g, '');
     setAmount(value);
-    setMessage(''); // Reset pesan error saat user mengetik
+    setMessage(''); 
   };
 
   const handleTopUp = async (e) => {
@@ -41,7 +38,6 @@ const TopUp = () => {
 
     const numericAmount = parseInt(amount, 10);
 
-    // Validasi nominal (biasanya minimal 10.000 dan maksimal 1.000.000 sesuai rule PPOB standar)
     if (!numericAmount || numericAmount < 10000) {
       setIsError(true);
       setMessage('Minimal Top Up adalah Rp 10.000');
@@ -61,8 +57,8 @@ const TopUp = () => {
 
       setIsError(false);
       setMessage(response.data.message || 'Top Up Berhasil!');
-      setAmount(''); // Kosongkan input setelah sukses
-      fetchBalance(); // Update tampilan saldo terbaru
+      setAmount(''); 
+      fetchBalance(); 
       
     } catch (error) {
       setIsError(true);
@@ -76,7 +72,6 @@ const TopUp = () => {
     }
   };
 
-  // Validasi apakah tombol Top Up boleh diklik
   const isSubmitDisabled = !amount || parseInt(amount, 10) < 10000 || isLoading;
 
   return (

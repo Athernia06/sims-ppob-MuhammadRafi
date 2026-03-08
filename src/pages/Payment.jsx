@@ -8,7 +8,6 @@ const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Mengambil data service yang dikirim dari halaman Home
   const service = location.state?.service;
 
   const [balance, setBalance] = useState(0);
@@ -17,7 +16,6 @@ const Payment = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Jika user mengakses URL ini langsung tanpa klik dari Home, kembalikan ke Home
     if (!service) {
       navigate('/');
       return;
@@ -39,7 +37,6 @@ const Payment = () => {
     setMessage('');
     setIsError(false);
 
-    // Cek apakah saldo cukup sebelum hit API (Best practice)
     if (balance < service.service_tariff) {
       setIsError(true);
       setMessage('Saldo tidak mencukupi untuk melakukan pembayaran ini.');
@@ -48,14 +45,13 @@ const Payment = () => {
 
     try {
       setIsLoading(true);
-      // Hit API Transaksi
       const response = await api.post('/transaction', {
         service_code: service.service_code,
       });
 
       setIsError(false);
       setMessage(response.data.message || `Pembayaran ${service.service_name} berhasil!`);
-      fetchBalance(); // Update saldo setelah bayar
+      fetchBalance(); 
       
     } catch (error) {
       setIsError(true);
@@ -69,7 +65,7 @@ const Payment = () => {
     }
   };
 
-  if (!service) return null; // Mencegah render error jika service kosong
+  if (!service) return null; 
 
   return (
     <div style={{ backgroundColor: 'white', minHeight: '100vh', color: '#333' }}>
