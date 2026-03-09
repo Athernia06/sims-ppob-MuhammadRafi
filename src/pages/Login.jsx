@@ -1,9 +1,10 @@
 // src/pages/Login.jsx
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import { loginSuccess } from '../redux/authSlice';
+import loginIllustration from '../assets/login-illustration.png'; 
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,10 +16,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     setErrorMsg('');
 
-    // 1. Validasi Input
     if (!email || !password) {
       setErrorMsg('Email dan password wajib diisi');
       return;
@@ -35,23 +35,15 @@ const Login = () => {
       return;
     }
 
-    // 2. Hit API Login
     try {
       setIsLoading(true);
-      const response = await api.post('/login', {
-        email,
-        password,
-      });
-
-      // 3. Simpan Token ke Redux
+      const response = await api.post('/login', { email, password });
       const token = response.data.data.token; 
       dispatch(loginSuccess(token));
-
-      // 4. Arahkan ke halaman utama (Home) setelah sukses
       navigate('/');
     } catch (error) {
       if (error.response && error.response.data) {
-        setErrorMsg(error.response.data.message || 'Login gagal, periksa kembali email dan password Anda.');
+        setErrorMsg(error.response.data.message || 'Login gagal.');
       } else {
         setErrorMsg('Terjadi kesalahan pada server');
       }
@@ -61,53 +53,78 @@ const Login = () => {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: '50px auto', fontFamily: 'sans-serif' }}>
-      <h2 style={{ textAlign: 'center' }}>Login SIMS PPOB</h2>
+    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'sans-serif' }}>
       
-      {/* Notifikasi Error */}
-      {errorMsg && (
-        <div style={{ color: 'red', backgroundColor: '#fee2e2', padding: '10px', borderRadius: '5px', marginBottom: '15px', fontSize: '14px' }}>
-          {errorMsg}
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ width: '100%', maxWidth: '400px', padding: '20px' }}>
+          
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '30px' }}>
+            <div style={{ width: '24px', height: '24px', backgroundColor: '#f13b2f', borderRadius: '50%' }}></div>
+            <h2 style={{ margin: 0 }}>SIMS PPOB</h2>
+          </div>
+
+          <h3 style={{ textAlign: 'center', fontSize: '24px', marginBottom: '40px' }}>
+            Masuk atau buat akun untuk memulai
+          </h3>
+          
+          {errorMsg && (
+            <div style={{ color: 'red', backgroundColor: '#fee2e2', padding: '10px', borderRadius: '5px', marginBottom: '15px', fontSize: '14px', textAlign: 'center' }}>
+              {errorMsg}
+            </div>
+          )}
+          
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div>
+              <input 
+                type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                placeholder="masukkan email anda"
+                style={{ width: '100%', padding: '15px', borderRadius: '5px', border: '1px solid #ccc', boxSizing: 'border-box' }}
+              />
+            </div>
+            <div>
+              <input 
+                type="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                placeholder="masukkan password anda"
+                style={{ width: '100%', padding: '15px', borderRadius: '5px', border: '1px solid #ccc', boxSizing: 'border-box' }}
+              />
+            </div>
+            <button 
+              type="submit" 
+              disabled={isLoading} 
+              style={{ 
+                padding: '15px', 
+                cursor: isLoading ? 'not-allowed' : 'pointer', 
+                backgroundColor: '#f13b2f', 
+                color: 'white', 
+                border: 'none', 
+                borderRadius: '5px',
+                fontWeight: 'bold',
+                fontSize: '16px',
+                marginTop: '10px'
+              }}
+            >
+              {isLoading ? 'Loading...' : 'Masuk'}
+            </button>
+          </form>
+
+          <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '14px', color: '#888' }}>
+            belum punya akun? <Link to="/registration" style={{ color: '#f13b2f', fontWeight: 'bold', textDecoration: 'none' }}>registrasi di sini</Link>
+          </p>
         </div>
-      )}
-      
-      <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <div>
-          <label style={{ display: 'block', marginBottom: '5px' }}>Email</label>
-          <input 
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            placeholder="masukkan email anda"
-            style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc', boxSizing: 'border-box' }}
-          />
-        </div>
-        <div>
-          <label style={{ display: 'block', marginBottom: '5px' }}>Password</label>
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            placeholder="masukkan password anda"
-            style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc', boxSizing: 'border-box' }}
-          />
-        </div>
-        <button 
-          type="submit" 
-          disabled={isLoading} 
-          style={{ 
-            padding: '12px', 
-            cursor: isLoading ? 'not-allowed' : 'pointer', 
-            backgroundColor: '#f13b2f', 
-            color: 'white', 
-            border: 'none', 
-            borderRadius: '5px',
-            fontWeight: 'bold'
-          }}
-        >
-          {isLoading ? 'Loading...' : 'Masuk'}
-        </button>
-      </form>
+      </div>
+
+      <div style={{ flex: 1, backgroundColor: '#fff0f0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <img 
+          src={loginIllustration} 
+          alt="Login Illustration" 
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+        />
+      </div>
+
     </div>
   );
 };

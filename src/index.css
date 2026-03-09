@@ -2,7 +2,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: white; /* Memaksa background jadi putih */
-  color: #333; /* Warna teks default gelap */
+  background-color: white; 
+  color: #333; 
   font-family: sans-serif;
 }

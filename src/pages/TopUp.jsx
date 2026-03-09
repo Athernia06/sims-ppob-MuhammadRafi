@@ -4,22 +4,28 @@ import api from '../services/api';
 import Navbar from '../components/Navbar';
 
 const TopUp = () => {
+  const [profile, setProfile] = useState(null);
   const [balance, setBalance] = useState(0);
+  const [showBalance, setShowBalance] = useState(false);
   const [amount, setAmount] = useState('');
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetchBalance();
+    fetchData();
   }, []);
 
-  const fetchBalance = async () => {
+  const fetchData = async () => {
     try {
-      const res = await api.get('/balance');
-      setBalance(res.data.data.balance);
+      const [profileRes, balanceRes] = await Promise.all([
+        api.get('/profile'),
+        api.get('/balance')
+      ]);
+      setProfile(profileRes.data.data);
+      setBalance(balanceRes.data.data.balance);
     } catch (error) {
-      console.error("Gagal mengambil saldo", error);
+      console.error("Gagal mengambil data", error);
     }
   };
 
@@ -58,7 +64,9 @@ const TopUp = () => {
       setIsError(false);
       setMessage(response.data.message || 'Top Up Berhasil!');
       setAmount(''); 
-      fetchBalance(); 
+      
+      const balanceRes = await api.get('/balance');
+      setBalance(balanceRes.data.data.balance);
       
     } catch (error) {
       setIsError(true);
@@ -80,16 +88,47 @@ const TopUp = () => {
       
       <div style={{ padding: '30px 50px', fontFamily: 'sans-serif' }}>
         
-        {/* Header: Informasi Saldo */}
-        <div style={{ marginBottom: '40px' }}>
-          <p style={{ fontSize: '18px', margin: '0 0 5px 0' }}>Silakan masukkan</p>
-          <h2 style={{ margin: '0 0 15px 0', fontSize: '32px' }}>Nominal Top Up</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '30px', marginBottom: '50px' }}>
+          <div style={{ flex: 1 }}>
+            <img 
+              src={profile?.profile_image && profile.profile_image !== "https://null" ? profile.profile_image : "https://via.placeholder.com/80"} 
+              alt="Profile" 
+              style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', marginBottom: '15px' }}
+            />
+            <p style={{ fontSize: '18px', margin: '0 0 5px 0', color: '#555' }}>Selamat datang,</p>
+            <h2 style={{ margin: '0', fontSize: '32px' }}>
+              {profile ? `${profile.first_name} ${profile.last_name}` : 'Loading...'}
+            </h2>
+          </div>
+
+          <div style={{ 
+            flex: 1.5, 
+            backgroundColor: '#f13b2f', 
+            color: 'white', 
+            padding: '25px 30px', 
+            borderRadius: '20px',
+            boxShadow: '0 4px 10px rgba(241, 59, 47, 0.3)'
+          }}>
+            <p style={{ margin: '0 0 10px 0', fontSize: '16px' }}>Saldo anda</p>
+            <h1 style={{ margin: '0 0 15px 0', fontSize: '36px' }}>
+              Rp {showBalance ? balance.toLocaleString('id-ID') : '•••••••'}
+            </h1>
+            <button 
+              onClick={() => setShowBalance(!showBalance)}
+              style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', padding: 0, fontSize: '14px', fontWeight: 'bold' }}
+            >
+              {showBalance ? 'Tutup Saldo' : 'Lihat Saldo'}
+            </button>
+          </div>
         </div>
 
-        {/* Layout Form & Tombol Cepat */}
+        <div style={{ marginBottom: '30px' }}>
+          <p style={{ fontSize: '18px', margin: '0 0 5px 0' }}>Silakan masukkan</p>
+          <h2 style={{ margin: '0', fontSize: '32px' }}>Nominal Top Up</h2>
+        </div>
+
         <div style={{ display: 'flex', gap: '30px' }}>
           
-          {/* Kiri: Input & Submit */}
           <div style={{ flex: 1.5 }}>
             <form onSubmit={handleTopUp} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <input 
@@ -140,13 +179,15 @@ const TopUp = () => {
             )}
           </div>
 
-          {/* Kanan: Tombol Nominal Cepat */}
           <div style={{ flex: 1, display: 'flex', flexWrap: 'wrap', gap: '10px', alignContent: 'flex-start' }}>
             {quickAmounts.map((val, index) => (
               <button
                 key={index}
                 type="button"
-                onClick={() => setAmount(val.toString())}
+                onClick={() => {
+                  setAmount(val.toString());
+                  setMessage('');
+                }}
                 style={{
                   flex: '1 0 30%',
                   padding: '15px 5px',
